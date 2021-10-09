@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>GuestList</title>
+    <script src="./lib/angular/angular.js"></script>
+    <script src="./js/ModelService.js"></script>
+
+    <link rel="stylesheet" href="lib/bootstrap/bootstrap.css">
+    <style>
+        body{
+            background-color:orange;
+        }
+        .row{
+            margin: 15px 0px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container" ng-app="app" ng-controller="mainController">
+        <div class="row text-center">
+            <H1>邀请名单</H1>
+        </div>
+        <div class="row form-inline">
+            <div class="input-group">
+                <div class="input-group-addon">姓名</div>
+                <input type="text" class="from-control" placeholder="输入姓名" ng-model="userInfo.name">
+            </div>
+            <div class="input-group">
+                <div class="input-group-addon">电话</div>
+                <input type="text" class="from-control" placeholder="输入电话" ng-model="userInfo.phone">
+            </div>
+            <div class="input-group" ng-init="userInfo.gender='男'">
+                <div class="input-group-addon">性别</div>
+                <input type="radio" ng-model="userInfo.gender" class="from-control" value="男" >男
+                <input type="radio" ng-model="userInfo.gender" class="from-control" value="女">女
+                <input type="radio" ng-model="userInfo.gender" class="from-control" value="保密">保密
+            </div>
+            <button type="button" class="btn btn-success" ng-click="invite(userInfo)">邀请</button>
+        </div>
+        <div class="row">
+            <a href="#!/all" class="btn btn-success btn-xs">显示全部：{{allcount}}</a>
+            <a href="#!/invite" class="btn btn-success btn-xs">显示邀请中：{{invitecount}}</a>
+            <a href="#!/accept" class="btn btn-success btn-xs">显示已接受：{{acceptcount}}</a>
+            <a href="#!/refuse" class="btn btn-success btn-xs">显示已拒绝：{{refusecount}}</a>
+        </div>
+        <div class="row">
+            
+            <table class="table table-bordered table-hover">
+                <thead>
+                    <tr>
+                        <th>编号</th><th>姓名</th><th>电话</th><th>性别</th><th>状态</th><th>操作</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr ng-repeat="guest in guests">
+                        <td>{{$index+1}}</td>
+                        <td>{{guest.name}}</td>
+                        <td>{{guest.phone}}</td>
+                        <td>{{guest.gender}}</td>
+                        <td>{{guest.state}}</td>
+                        <td>
+                           <span ng-if="guest.state=='邀请中'">
+                            <button type="button" class="btn btn-success btn-xs" >接受邀请</button>
+                            <button type="button" class="btn btn-danger btn-xs" >拒绝邀请</button>
+                            </span>
+                            <button type="button" class="btn btn-default btn-xs">删除</button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            
+        </div>
+    </div>
+    <script>
+        var app=angular.module('app', ['model'])
+        app.controller("mainController",function($scope,modelService){
+            console.log(modelService.getList())
+            $scope.guests=modelService.getList()
+
+            var userInfo = $scope.userInfo={name:'', phone:'', gender:'男'}
+            $scope.invite=function(userInfo){
+                var msg = modelService.add(userInfo.name, userInfo.phone, userInfo.gender)
+                switch(msg.code){
+                    case 0:
+                    $scope.guests=modelService.getList()
+                    userInfo.name=userInfo.phone=''
+                    userInfo.gender='男'
+                    break
+                    case 1:
+                    alert("请输入正确的姓名和电话!")
+                    break
+                    case 2:
+                    alert("请检查嘉宾电话是否重复!")
+                    break
+                }
+            }
+        })
+    </script>
+</body>
+
+</html>
