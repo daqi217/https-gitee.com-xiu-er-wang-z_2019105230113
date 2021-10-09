@@ -4,6 +4,9 @@
 <head>
     <meta charset="UTF-8">
     <title>GuestList</title>
+    <script src="./lib/angular/angular.js"></script>
+    <script src="./js/ModelService.js"></script>
+
     <link rel="stylesheet" href="lib/bootstrap/bootstrap.css">
     <style>
         body{
@@ -15,11 +18,10 @@
     </style>
 </head>
 <body>
-    <div class="container">
+    <div class="container" ng-app="app" ng-controller="mainController">
         <div class="row text-center">
             <H1>邀请名单</H1>
         </div>
-        <form>
         <div class="row form-inline">
             <div class="input-group">
                 <div class="input-group-addon">姓名</div>
@@ -37,12 +39,11 @@
             </div>
             <button type="button" class="btn btn-success">邀请</button>
         </div>
-        </form>
         <div class="row">
-            <a href="#!/all" class="btn btn-success btn-xs">显示全部：1</a>
+            <a href="#!/all" class="btn btn-success btn-xs">显示全部：3</a>
             <a href="#!/invite" class="btn btn-success btn-xs">显示邀请中：1</a>
-            <a href="#!/accept" class="btn btn-success btn-xs">显示已接受：0</a>
-            <a href="#!/refuse" class="btn btn-success btn-xs">显示已拒绝：0</a>
+            <a href="#!/accept" class="btn btn-success btn-xs">显示已接受：1</a>
+            <a href="#!/refuse" class="btn btn-success btn-xs">显示已拒绝：1</a>
         </div>
         <div class="row">
             
@@ -53,11 +54,17 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr>
-                        <td>1</td><td>某某某</td><td>13866933928</td><td>男</td><td>邀请中</td>
+                    <tr ng-repeat="guest in guests">
+                        <td>{{$index+1}}</td>
+                        <td>{{guest.name}}</td>
+                        <td>{{guest.phone}}</td>
+                        <td>{{guest.gender}}</td>
+                        <td>{{guest.state}}</td>
                         <td>
+                           <span ng-if="guest.state=='邀请中'">
                             <button type="button" class="btn btn-success btn-xs">接受邀请</button>
                             <button type="button" class="btn btn-danger btn-xs">拒绝邀请</button>
+                            </span>
                             <button type="button" class="btn btn-default btn-xs">删除</button>
                         </td>
                     </tr>
@@ -66,6 +73,13 @@
             
         </div>
     </div>
+    <script>
+        var app=angular.module('app', ['model'])
+        app.controller("mainController",function($scope,modelService){
+            console.log(modelService.getList())
+            $scope.guests=modelService.getList()
+        })
+    </script>
 </body>
 
 </html>
