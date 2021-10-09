@@ -31,19 +31,19 @@
                 <div class="input-group-addon">电话</div>
                 <input type="text" class="from-control" placeholder="输入电话" ng-model="userInfo.phone">
             </div>
-            <div class="input-group" ng-init="userInfo.gender='男'">
+            <div class="input-group">
                 <div class="input-group-addon">性别</div>
-                <input type="radio" ng-model="userInfo.gender" class="from-control" value="男" >男
+                <input type="radio" ng-model="userInfo.gender" class="from-control" value="男" ng-checked="true">男
                 <input type="radio" ng-model="userInfo.gender" class="from-control" value="女">女
                 <input type="radio" ng-model="userInfo.gender" class="from-control" value="保密">保密
             </div>
             <button type="button" class="btn btn-success" ng-click="invite(userInfo)">邀请</button>
         </div>
         <div class="row">
-            <a href="#!/all" class="btn btn-success btn-xs">显示全部：{{allcount}}</a>
-            <a href="#!/invite" class="btn btn-success btn-xs">显示邀请中：{{invitecount}}</a>
-            <a href="#!/accept" class="btn btn-success btn-xs">显示已接受：{{acceptcount}}</a>
-            <a href="#!/refuse" class="btn btn-success btn-xs">显示已拒绝：{{refusecount}}</a>
+            <a href="#!/all" class="btn btn-success btn-xs">显示全部</a>
+            <a href="#!/invite" class="btn btn-success btn-xs">显示邀请中</a>
+            <a href="#!/accept" class="btn btn-success btn-xs">显示已接受</a>
+            <a href="#!/refuse" class="btn btn-success btn-xs">显示已拒绝</a>
         </div>
         <div class="row">
             
@@ -62,10 +62,10 @@
                         <td>{{guest.state}}</td>
                         <td>
                            <span ng-if="guest.state=='邀请中'">
-                            <button type="button" class="btn btn-success btn-xs" >接受邀请</button>
-                            <button type="button" class="btn btn-danger btn-xs" >拒绝邀请</button>
+                            <button type="button" class="btn btn-success btn-xs" ng-click="guest.accept()">接受邀请</button>
+                            <button type="button" class="btn btn-danger btn-xs" ng-click="guest.refuse()">拒绝邀请</button>
                             </span>
-                            <button type="button" class="btn btn-default btn-xs">删除</button>
+                            <button type="button" class="btn btn-default btn-xs" ng-click="remove(guest)">删除</button>
                         </td>
                     </tr>
                 </tbody>
@@ -78,7 +78,6 @@
         app.controller("mainController",function($scope,modelService){
             console.log(modelService.getList())
             $scope.guests=modelService.getList()
-
             var userInfo = $scope.userInfo={name:'', phone:'', gender:'男'}
             $scope.invite=function(userInfo){
                 var msg = modelService.add(userInfo.name, userInfo.phone, userInfo.gender)
@@ -95,6 +94,10 @@
                     alert("请检查嘉宾电话是否重复!")
                     break
                 }
+            }
+            $scope.remove=function(guest){
+                modelService.remove(guest)
+                $scope.guests=modelService.getList()
             }
         })
     </script>
