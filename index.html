@@ -3,83 +3,144 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>GuestList</title>
-    <script src="./lib/angular/angular.js"></script>
-    <script src="./js/ModelService.js"></script>
-
+    <title>邀请名单</title>
     <link rel="stylesheet" href="lib/bootstrap/bootstrap.css">
-    <style>
-        body{
-            background-color:orange;
-        }
-        .row{
-            margin: 15px 0px;
-        }
-    </style>
 </head>
-<body>
-    <div class="container" ng-app="app" ng-controller="mainController">
-        <div class="row text-center">
-            <H1>邀请名单</H1>
-        </div>
-        <div class="row form-inline">
-            <div class="input-group">
-                <div class="input-group-addon">姓名</div>
-                <input type="text" class="from-control" placeholder="输入姓名">
-            </div>
-            <div class="input-group">
-                <div class="input-group-addon">电话</div>
-                <input type="text" class="from-control" placeholder="输入电话">
-            </div>
-            <div class="input-group">
-                <div class="input-group-addon">性别</div>
-                <input type="radio" ng-model="gender" class="from-control" value="男" ng-checked="true">男
-                <input type="radio" ng-model="gender" class="from-control" value="女">女
-                <input type="radio" ng-model="gender" class="from-control" value="保密">保密
-            </div>
-            <button type="button" class="btn btn-success">邀请</button>
-        </div>
+<style>
+    li {
+        float: left;
+    }
+    body {
+        padding-top: 50px;
+    }
+</style>
+<body ng-app="nameList">
+<div ng-controller="MainController">
+    <div class="container" style="background-color:  #edbc80">
         <div class="row">
-            <a href="#!/all" class="btn btn-success btn-xs">显示全部：3</a>
-            <a href="#!/invite" class="btn btn-success btn-xs">显示邀请中：1</a>
-            <a href="#!/accept" class="btn btn-success btn-xs">显示已接受：1</a>
-            <a href="#!/refuse" class="btn btn-success btn-xs">显示已拒绝：1</a>
+            <center><h1>邀请名单</h1></center>
         </div>
-        <div class="row">
-            
-            <table class="table table-bordered table-hover">
-                <thead>
-                    <tr>
-                        <th>编号</th><th>姓名</th><th>电话</th><th>性别</th><th>状态</th><th>操作</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr ng-repeat="guest in guests">
-                        <td>{{$index+1}}</td>
-                        <td>{{guest.name}}</td>
-                        <td>{{guest.phone}}</td>
-                        <td>{{guest.gender}}</td>
-                        <td>{{guest.state}}</td>
-                        <td>
-                           <span ng-if="guest.state=='邀请中'">
-                            <button type="button" class="btn btn-success btn-xs">接受邀请</button>
-                            <button type="button" class="btn btn-danger btn-xs">拒绝邀请</button>
-                            </span>
-                            <button type="button" class="btn btn-default btn-xs">删除</button>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-            
+        <div class="row" style="padding-top: 30px;">
+            <div class="col-xs-3">
+                <div class="input-group">
+                  <span class="input-group-addon">
+                      姓名
+                  </span>
+                    <input type="text" ng-model="guestInfo.name" class="form-control" placeholder="输入姓名">
+                </div>
+            </div>
+            <div class="col-xs-3">
+                <div class="input-group">
+                  <span class="input-group-addon">
+                      电话
+                  </span>
+                    <input type="text" ng-model="guestInfo.phone" class="form-control" placeholder="输入电话">
+                </div>
+            </div>
+            <div class="col-xs-2">
+                <div class="input-group">
+                    <div class="input-group-addon">性别</div>
+                    <input type="radio" ng-model="guestInfo.gender" class="from-control" value="男" ng-checked="true">男
+                    <input type="radio" ng-model="guestInfo.gender" class="from-control" value="女">女
+                    <input type="radio" ng-model="guestInfo.gender" class="from-control" value="保密">保密
+                </div>
+            </div>
+            <div class="col-xs-1">
+                <button ng-click="invite()" class="btn btn-success">邀请</button>
+            </div>
         </div>
+        <div class="row" style="padding: 20px;">
+            <a class="btn btn-success btn-xs "  href="#!/all">显示全部</a>
+            <a class="btn btn-success btn-xs "  href="#!/invite">显示邀请中</a>
+            <a class="btn btn-success btn-xs "  href="#!/accept">显示已接受</a>
+            <a class="btn btn-success btn-xs "  href="#!/refuse">显示已拒绝</a>
+        </div>
+    <div>
+        <div class="row" style="padding: 15px;">
+            <table class="table table-bordered">
+            <tr>
+                <th>编号</th>
+                <th>姓名</th>
+                <th>电话</th>
+                <th>性别</th>
+                <th>状态</th>
+                <th>操作</th>
+            </tr>
+            <tr ng-repeat="guest in guests">
+                <td>{{$index+1}}</td>
+                <td>{{guest.name}}</td>
+                <td>{{guest.phone}}</td>
+                <td>{{guest.gender}}</td>
+                <td>{{guest.state}}</td>
+                <td>
+                    <button ng-if="guest.state=='邀请中'" ng-click="guest.accept()" class="btn btn-xs btn-success">接受邀请</button>
+                    <button ng-if="guest.state=='邀请中'" ng-click="guest.refuse()" class="btn btn-xs btn-danger">拒绝邀请</button>
+                    <button ng-click="remove(guest)" class="btn btn-xs btn-default">删除</button>
+                </td>
+            </tr>
+        </table>
     </div>
-    <script>
-        var app=angular.module('app', ['model'])
-        app.controller("mainController",function($scope,modelService){
-            console.log(modelService.getList())
-            $scope.guests=modelService.getList()
-        })
-    </script>
+</div>
+    </div>
+    </div>
+<script src="lib/angular/angular.js"></script>
+<script src="js/ModelService.js"></script>
+<script>
+    var app = angular.module('nameList', ['nameList.model']);
+    app.controller('MainController', function ($scope, $location, modelService) {
+        var state = Guest.ALL;
+        var guestInfo = $scope.guestInfo = {
+            name: '',
+            phone: '',
+            gender:'男'
+        };
+        // 点击邀请按钮，邀请当前嘉宾
+        $scope.invite = function () {
+            var msg = modelService.add(guestInfo.name, guestInfo.phone, guestInfo.gender);
+            guestInfo.name = '';
+            guestInfo.phone = '';
+            guestInfo.gender = '男';
+            switch (msg.code) {
+                case 0: // 0 代表成功
+                    // Model层数据更新之后，把更新同步到ViewModel
+                    $scope.guests = modelService.getList(state);
+                    break;
+                case 1: // 1 代表姓名和电话有问题
+                    alert('请输入正确的姓名和电话。');
+                    break;
+                case 2: // 2 代表嘉宾信息重复
+                    alert('嘉宾信息有重复，请进行检查');
+                    break;
+            }
+        };
+            // 点击删除按钮，删除对应的嘉宾
+        $scope.remove = function (guest) {
+            modelService.remove(guest);
+            // 更新了模型之后，同步模型上的更新到ViewModel上
+            $scope.guests = modelService.getList(state);
+        };
+        // 监听$location，完成路由功能，进行列表的筛选
+        $scope.location = $location;
+        $scope.$watch('location.path()', function (newValue) {
+            switch (newValue) {
+                case '/all':
+                    state = Guest.ALL;
+                    break;
+                case '/invite':
+                    state = Guest.INVITE;
+                    break;
+                case '/accept':
+                    state = Guest.ACCEPT;
+                    break;
+                case '/refuse':
+                    state = Guest.REFUSE;
+                    break;
+            }
+            // 把数据从模型移动到视图模型。
+            $scope.guests = modelService.getList(state);
+        });
+    });
+</script>
 </body>
-
+>>>>>>> 56ef882cd09db69bcd93fc7238ca665cfda2c7d9
 </html>
