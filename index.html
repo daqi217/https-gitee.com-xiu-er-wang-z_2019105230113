@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>GuestList</title>
+    <link rel="stylesheet" href="lib/bootstrap/bootstrap.css">
+    <style>
+        body{
+            background-color:orange;
+        }
+        .row{
+            margin: 15px 0px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="row text-center">
+            <H1>邀请名单</H1>
+        </div>
+        <form>
+        <div class="row form-inline">
+            <div class="input-group">
+                <div class="input-group-addon">姓名</div>
+                <input type="text" class="from-control" placeholder="输入姓名">
+            </div>
+            <div class="input-group">
+                <div class="input-group-addon">电话</div>
+                <input type="text" class="from-control" placeholder="输入电话">
+            </div>
+            <div class="input-group">
+                <div class="input-group-addon">性别</div>
+                <input type="radio" ng-model="gender" class="from-control" value="男" ng-checked="true">男
+                <input type="radio" ng-model="gender" class="from-control" value="女">女
+                <input type="radio" ng-model="gender" class="from-control" value="保密">保密
+            </div>
+            <button type="button" class="btn btn-success">邀请</button>
+        </div>
+        </form>
+        <div class="row">
+            <a href="#!/all" class="btn btn-success btn-xs">显示全部：1</a>
+            <a href="#!/invite" class="btn btn-success btn-xs">显示邀请中：1</a>
+            <a href="#!/accept" class="btn btn-success btn-xs">显示已接受：0</a>
+            <a href="#!/refuse" class="btn btn-success btn-xs">显示已拒绝：0</a>
+        </div>
+        <div class="row">
+            
+            <table class="table table-bordered table-hover">
+                <thead>
+                    <tr>
+                        <th>编号</th><th>姓名</th><th>电话</th><th>性别</th><th>状态</th><th>操作</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>1</td><td>某某某</td><td>13866933928</td><td>男</td><td>邀请中</td>
+                        <td>
+                            <button type="button" class="btn btn-success btn-xs">接受邀请</button>
+                            <button type="button" class="btn btn-danger btn-xs">拒绝邀请</button>
+                            <button type="button" class="btn btn-default btn-xs">删除</button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            
+        </div>
+    </div>
+</body>
+
+</html>
